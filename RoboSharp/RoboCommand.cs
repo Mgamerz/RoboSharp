@@ -88,7 +88,7 @@ namespace RoboSharp
         void process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             resultsBuilder?.AddOutput(e.Data);
-            Debug.WriteLine(e.Data);
+            //Debug.WriteLine(e.Data);
             if (e.Data == null)
                 return;
             var data = e.Data.Trim().Replace("\0", "");
@@ -108,7 +108,7 @@ namespace RoboSharp
 
                     if (splitData.Length == 2)
                     {
-                        Debug.WriteLine($"Len2: {e.Data}");
+                        //Debug.WriteLine($"Len2: {e.Data}");
                         var file = new ProcessedFileInfo();
                         file.FileClass = "New Dir";
                         file.FileClassType = FileClassType.NewDir;
@@ -120,7 +120,7 @@ namespace RoboSharp
                     }
                     else if (splitData.Length == 3)
                     {
-                        Debug.WriteLine($"Len3: {e.Data}");
+                        //Debug.WriteLine($"Len3: {e.Data}");
                         var file = new ProcessedFileInfo();
                         file.FileClass = splitData[0].Trim();
                         file.FileClassType = FileClassType.File;
