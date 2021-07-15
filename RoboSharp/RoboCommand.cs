@@ -88,7 +88,7 @@ namespace RoboSharp
         void process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             resultsBuilder?.AddOutput(e.Data);
-
+            Debug.WriteLine(e.Data);
             if (e.Data == null)
                 return;
             var data = e.Data.Trim().Replace("\0", "");
@@ -108,6 +108,7 @@ namespace RoboSharp
 
                     if (splitData.Length == 2)
                     {
+                        Debug.WriteLine($"Len2: {e.Data}");
                         var file = new ProcessedFileInfo();
                         file.FileClass = "New Dir";
                         file.FileClassType = FileClassType.NewDir;
@@ -119,6 +120,7 @@ namespace RoboSharp
                     }
                     else if (splitData.Length == 3)
                     {
+                        Debug.WriteLine($"Len3: {e.Data}");
                         var file = new ProcessedFileInfo();
                         file.FileClass = splitData[0].Trim();
                         file.FileClassType = FileClassType.File;
@@ -184,7 +186,7 @@ namespace RoboSharp
 
         public void Resume()
         {
-            if (process != null && isPaused == true)
+            if (process != null && isPaused)
             {
                 Debugger.Instance.DebugMessage("RoboCommand execution resumed.");
                 process.Resume();
@@ -192,13 +194,11 @@ namespace RoboSharp
             }
         }
 
-#if NET45
         public async Task<Results.RoboCopyResults> StartAsync(string domain = "", string username = "", string password = "")
         {
             await Start(domain, username, password);
             return GetResults();
         }
-#endif
 
         public Task Start(string domain = "", string username = "", string password = "")
         {
@@ -362,8 +362,7 @@ namespace RoboSharp
             Debugger.Instance.DebugMessage("LoggingOptions parsed.");
             //var systemOptions = " /V /R:0 /FP /BYTES /W:0 /NJH /NJS";
 
-            return string.Format("{0}{1}{2}{3} /BYTES", parsedCopyOptions, parsedSelectionOptions,
-                parsedRetryOptions, parsedLoggingOptions);
+            return $"{parsedCopyOptions}{parsedSelectionOptions}{parsedRetryOptions}{parsedLoggingOptions} /BYTES";
         }
 
         #region IDisposable Implementation
