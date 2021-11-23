@@ -176,7 +176,7 @@ namespace RoboSharp
         {
             if (process != null && isPaused == false)
             {
-                Debugger.Instance.DebugMessage("RoboCommand execution paused.");
+                RoboDebugger.Instance.DebugMessage("RoboCommand execution paused.");
                 process.Suspend();
                 isPaused = true;
             }
@@ -186,7 +186,7 @@ namespace RoboSharp
         {
             if (process != null && isPaused == true)
             {
-                Debugger.Instance.DebugMessage("RoboCommand execution resumed.");
+                RoboDebugger.Instance.DebugMessage("RoboCommand execution resumed.");
                 process.Resume();
                 isPaused = false;
             }
@@ -202,7 +202,7 @@ namespace RoboSharp
 
         public Task Start(string domain = "", string username = "", string password = "")
         {
-            Debugger.Instance.DebugMessage("RoboCommand started execution.");
+            RoboDebugger.Instance.DebugMessage("RoboCommand started execution.");
             hasError = false;
             
             isRunning = true;
@@ -216,10 +216,10 @@ namespace RoboSharp
             // make sure source path is valid
             if (!Directory.Exists(CopyOptions.Source))
             {
-                Debugger.Instance.DebugMessage("The Source directory does not exist.");
+                RoboDebugger.Instance.DebugMessage("The Source directory does not exist.");
                 hasError = true;
                 OnCommandError?.Invoke(this, new CommandErrorEventArgs("The Source directory does not exist."));
-                Debugger.Instance.DebugMessage("RoboCommand execution stopped due to error.");
+                RoboDebugger.Instance.DebugMessage("RoboCommand execution stopped due to error.");
                 tokenSource.Cancel(true);
             }
 
@@ -230,19 +230,19 @@ namespace RoboSharp
                 var dInfo = Directory.CreateDirectory(CopyOptions.Destination);
                 if (!dInfo.Exists)
                 {
-                    Debugger.Instance.DebugMessage("The destination directory does not exist.");
+                    RoboDebugger.Instance.DebugMessage("The destination directory does not exist.");
                     hasError = true;
                     OnCommandError?.Invoke(this, new CommandErrorEventArgs("The Destination directory is invalid."));
-                    Debugger.Instance.DebugMessage("RoboCommand execution stopped due to error.");
+                    RoboDebugger.Instance.DebugMessage("RoboCommand execution stopped due to error.");
                     tokenSource.Cancel(true);
                 }
             }
             catch (Exception ex)
             {
-                Debugger.Instance.DebugMessage(ex.Message);
+                RoboDebugger.Instance.DebugMessage(ex.Message);
                 hasError = true;
                 OnCommandError?.Invoke(this, new CommandErrorEventArgs("The Destination directory is invalid."));
-                Debugger.Instance.DebugMessage("RoboCommand execution stopped due to error.");
+                RoboDebugger.Instance.DebugMessage("RoboCommand execution stopped due to error.");
                 tokenSource.Cancel(true);
             }
 
@@ -255,19 +255,19 @@ namespace RoboSharp
 
                 if (!string.IsNullOrEmpty(domain))
                 {
-                    Debugger.Instance.DebugMessage(string.Format("RoboCommand running under domain - {0}", domain));
+                    RoboDebugger.Instance.DebugMessage(string.Format("RoboCommand running under domain - {0}", domain));
                     process.StartInfo.Domain = domain;
                 }
 
                 if (!string.IsNullOrEmpty(username))
                 {
-                    Debugger.Instance.DebugMessage(string.Format("RoboCommand running under username - {0}", username));
+                    RoboDebugger.Instance.DebugMessage(string.Format("RoboCommand running under username - {0}", username));
                     process.StartInfo.UserName = username;
                 }
 
                 if (!string.IsNullOrEmpty(password))
                 {
-                    Debugger.Instance.DebugMessage("RoboCommand password entered.");
+                    RoboDebugger.Instance.DebugMessage("RoboCommand password entered.");
                     var ssPwd = new System.Security.SecureString();
 
                     for (int x = 0; x < password.Length; x++)
@@ -278,7 +278,7 @@ namespace RoboSharp
                     process.StartInfo.Password = ssPwd;
                 }
 
-                Debugger.Instance.DebugMessage("Setting RoboCopy process up...");
+                RoboDebugger.Instance.DebugMessage("Setting RoboCopy process up...");
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
@@ -290,13 +290,13 @@ namespace RoboSharp
                 process.ErrorDataReceived += process_ErrorDataReceived;
                 process.EnableRaisingEvents = true;
                 process.Exited += Process_Exited;
-                Debugger.Instance.DebugMessage("RoboCopy process started.");
+                RoboDebugger.Instance.DebugMessage("RoboCopy process started.");
                 process.Start();
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
                 process.WaitForExit();
                 results = resultsBuilder.BuildResults(process?.ExitCode ?? -1);
-                Debugger.Instance.DebugMessage("RoboCopy process exited.");
+                RoboDebugger.Instance.DebugMessage("RoboCopy process exited.");
             }, cancellationToken, TaskCreationOptions.LongRunning, PriorityScheduler.BelowNormal);
 
             Task continueWithTask = backupTask.ContinueWith((continuation) =>
@@ -351,15 +351,15 @@ namespace RoboSharp
 
         private string GenerateParameters()
         {
-            Debugger.Instance.DebugMessage("Generating parameters...");
-            Debugger.Instance.DebugMessage(CopyOptions);
+            RoboDebugger.Instance.DebugMessage("Generating parameters...");
+            RoboDebugger.Instance.DebugMessage(CopyOptions);
             var parsedCopyOptions = CopyOptions.Parse();
             var parsedSelectionOptions = SelectionOptions.Parse();
-            Debugger.Instance.DebugMessage("SelectionOptions parsed.");
+            RoboDebugger.Instance.DebugMessage("SelectionOptions parsed.");
             var parsedRetryOptions = RetryOptions.Parse();
-            Debugger.Instance.DebugMessage("RetryOptions parsed.");
+            RoboDebugger.Instance.DebugMessage("RetryOptions parsed.");
             var parsedLoggingOptions = LoggingOptions.Parse();
-            Debugger.Instance.DebugMessage("LoggingOptions parsed.");
+            RoboDebugger.Instance.DebugMessage("LoggingOptions parsed.");
             //var systemOptions = " /V /R:0 /FP /BYTES /W:0 /NJH /NJS";
 
             return string.Format("{0}{1}{2}{3} /BYTES", parsedCopyOptions, parsedSelectionOptions,

@@ -279,7 +279,7 @@ namespace RoboSharp
 
         internal string Parse()
         {
-            Debugger.Instance.DebugMessage("Parsing CopyOptions...");
+            RoboDebugger.Instance.DebugMessage("Parsing CopyOptions...");
             var version = VersionManager.Version;
             var options = new StringBuilder();
 
@@ -293,7 +293,7 @@ namespace RoboSharp
             string fileFilter = String.Join(" ", fileFilterQuotedItems);
             options.Append($"{fileFilter} ");
 
-            Debugger.Instance.DebugMessage(string.Format("Parsing CopyOptions progress ({0}).", options.ToString()));
+            RoboDebugger.Instance.DebugMessage(string.Format("Parsing CopyOptions progress ({0}).", options.ToString()));
 
             #region Set Options
             var cleanedCopyFlags = CopyFlags.CleanOptionInput();
@@ -302,17 +302,17 @@ namespace RoboSharp
             if (!cleanedCopyFlags.IsNullOrWhiteSpace())
             {
                 options.Append(string.Format(COPY_FLAGS, cleanedCopyFlags));
-                Debugger.Instance.DebugMessage(string.Format("Parsing CopyOptions progress ({0}).", options.ToString()));
+                RoboDebugger.Instance.DebugMessage(string.Format("Parsing CopyOptions progress ({0}).", options.ToString()));
             }
             if (!cleanedDirectoryCopyFlags.IsNullOrWhiteSpace() && version >= 5.1260026)
             {
                 options.Append(string.Format(DIRECTORY_COPY_FLAGS, cleanedDirectoryCopyFlags));
-                Debugger.Instance.DebugMessage(string.Format("Parsing CopyOptions progress ({0}).", options.ToString()));
+                RoboDebugger.Instance.DebugMessage(string.Format("Parsing CopyOptions progress ({0}).", options.ToString()));
             }
             if (CopySubdirectories)
             {
                 options.Append(COPY_SUBDIRECTORIES);
-                Debugger.Instance.DebugMessage(string.Format("Parsing CopyOptions progress ({0}).", options.ToString()));
+                RoboDebugger.Instance.DebugMessage(string.Format("Parsing CopyOptions progress ({0}).", options.ToString()));
             }
             if (CopySubdirectoriesIncludingEmpty)
                 options.Append(COPY_SUBDIRECTORIES_INCLUDING_EMPTY);
@@ -377,7 +377,7 @@ namespace RoboSharp
             #endregion Set Options
 
             var parsedOptions = options.ToString();
-            Debugger.Instance.DebugMessage(string.Format("CopyOptions parsed ({0}).", parsedOptions));
+            RoboDebugger.Instance.DebugMessage(string.Format("CopyOptions parsed ({0}).", parsedOptions));
             return parsedOptions;
         }
     }
