@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net40;net45;</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Version>1.2.2</Version>
 		<Copyright>Copyright � 2020</Copyright>
@@ -21,5 +21,9 @@
 
 	<ItemGroup>
 		<Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="System.Management" Version="6.0.0" />
 	</ItemGroup>
 </Project>
